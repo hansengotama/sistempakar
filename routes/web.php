@@ -48,10 +48,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/add-disease-solution', 'AdminController@addDiseaseSolution');
         Route::post('/edit-disease-solution', 'AdminController@editDiseaseSolution');
         Route::post('/delete-disease-solution', 'AdminController@deleteDiseaseSolution');
+        Route::get('/get-consultation-detail', 'AdminController@getConsultationDetail');
+        Route::get('/consultation-detail-view', 'AdminController@consultationDetailView')->name('consultation-detail-view');
     });
 
     Route::group(['middleware' => 'patient'], function () {
         Route::get('/home-patient', 'PatientController@home')->name('home-patient');
         Route::get('/consultation-view', 'PatientController@consultationView')->name('consultation-view');
+        Route::get('/get-all-questions', 'PatientController@getAllQuestions');
+        Route::get('/get-all-diseases-patient', 'PatientController@getAllDiseases');
+        Route::post('/add-session-answer', 'PatientController@addSessionAnswer');
     });
 });

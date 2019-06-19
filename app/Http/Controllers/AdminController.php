@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Diseases;
 use App\DiseaseSolutions;
 use App\Questions;
+use App\SessionAnswers;
+use App\Sessions;
 use App\Solutions;
 use App\User;
 use Illuminate\Http\Request;
@@ -159,8 +161,12 @@ class AdminController extends Controller
         $parent_id = $request->questionId;
         $parent_id = serialize($parent_id);
 
+        $diseaseId = $request->diseaseId;
+        if($diseaseId == 0)
+            $diseaseId = null;
+
         Questions::create([
-            "disease_id" => $request->diseaseId,
+            "disease_id" => $diseaseId,
             "parent_id" => $parent_id,
             "question" => $request->question
         ]);
@@ -174,8 +180,13 @@ class AdminController extends Controller
         $parent_id = serialize($parent_id);
 
         $question = Questions::where("id", $request->id)->first();
+
+        $diseaseId = $request->diseaseId;
+        if($diseaseId == 0)
+            $diseaseId = null;
+
         $question->update([
-            "disease_id" => $request->diseaseId,
+            "disease_id" => $diseaseId,
             "parent_id" => $parent_id,
             "question" => $request->question
         ]);
@@ -259,5 +270,24 @@ class AdminController extends Controller
         $diseaseSolution = DiseaseSolutions::where("id", $id)->first();
 
         return response()->json($diseaseSolution, 200);
+    }
+
+    public function getConsultationDetail()
+    {
+        $sessions = Sessions::with(['disease', 'answers' => function($query) {
+            $query->with("question");
+        }, 'user'])->get();
+        foreach ($sessions as $session) {
+            $disease_id = $session->disease_id;
+            $diseaseSolutions = DiseaseSolutions::where("disease_id", $disease_id)->with('solution')->get();
+            $session->disease_solutions = $diseaseSolutions;
+        }
+
+        return response()->json($sessions, 200);
+    }
+
+    public function consultationDetailView()
+    {
+        return view('admin.consultationdetail');
     }
 }

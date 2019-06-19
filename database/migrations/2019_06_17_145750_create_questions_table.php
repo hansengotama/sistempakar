@@ -15,7 +15,7 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('disease_id')->unsigned();
+            $table->integer('disease_id')->unsigned()->nullable();
             $table->foreign('disease_id')->references('id')->on('diseases')->onDelete('cascade');
             $table->string('parent_id');
             $table->longText('question');

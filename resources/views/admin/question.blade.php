@@ -64,7 +64,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Disease</label>
-                                <select type="text" :class="'form-control '+error.class.diseaseId" v-model="formValue.diseaseId" @change="getSelectQuestion(formValue.diseaseId)">
+                                <select type="text" :class="'form-control '+error.class.diseaseId" v-model="formValue.diseaseId">
                                     <option v-for="disease in selectDiseases" :value=disease.id>@{{ disease.name }}</option>
                                 </select>
                                 <div class="red">@{{ error.text.diseaseId }}</div>
@@ -104,7 +104,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Disease</label>
-                                <select type="text" :class="'form-control '+error.class.diseaseId" v-model="formValue.diseaseId" @change="getSelectQuestion(formValue.diseaseId)">
+                                <select type="text" :class="'form-control '+error.class.diseaseId" v-model="formValue.diseaseId">
                                     <option v-for="disease in selectDiseases" :value=disease.id>@{{ disease.name }}</option>
                                 </select>
                                 <div class="red">@{{ error.text.diseaseId }}</div>
@@ -231,7 +231,7 @@
                     this.formValue.question = ""
                     this.formValue.questionId = []
                     this.formValue.diseaseId = this.selectDiseases[0].id
-                    this.getSelectQuestion(this.selectDiseases[0].id)
+                    this.getSelectQuestion()
                 },
                 addQuestion() {
                     axios.post("/add-question", this.formValue)
@@ -272,20 +272,23 @@
                     .then(function (response) {
                         if(response.status) {
                             app.selectDiseases = response.data
+                            app.selectDiseases.push({
+                                id: 0,
+                                name: "Global"
+                            })
                             app.formValue.diseaseId = response.data[0].id
-                            app.getSelectQuestion(response.data[0].id)
+                            app.getSelectQuestion()
                         }
                     })
                 },
-                getSelectQuestion(disease_id) {
-                    console.log(disease_id)
-                    axios.get("get-question-disease/"+disease_id)
+                getSelectQuestion() {
+                    axios.get("get-questions")
                     .then(function (response) {
                         if(response.status) {
                             app.selectQuestions = response.data
                             app.selectQuestions.push({
                                 id: 0,
-                                question: "begin"
+                                question: "Begin"
                             })
                         }
                     })
@@ -313,7 +316,7 @@
                         if(response.status) {
                             app.popUpSuccess()
                             app.getQuestions()
-                            app.getSelectQuestion(app.selectDiseases[0].id)
+                            app.getSelectQuestion()
                         }else {
                             app.popUpError()
                         }

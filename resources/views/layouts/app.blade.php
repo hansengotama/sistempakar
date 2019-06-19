@@ -68,7 +68,7 @@
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/patient list-view">Patient List</a>
-                            <a class="dropdown-item" href="/laporan-konsultasi">Laporan Konsultasi</a>
+                            <a class="dropdown-item" href="/consultation-detail-view">Consultation Detail</a>
                         </div>
                     </li>
                     <li class="nav-item">

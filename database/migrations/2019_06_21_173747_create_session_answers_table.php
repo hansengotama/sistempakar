@@ -17,8 +17,8 @@ class CreateSessionAnswersTable extends Migration
             $table->increments('id');
             $table->integer("question_id")->unsigned();
             $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade');
-            $table->integer("session_id")->unsigned();
-            $table->foreign('session_id')->references('id')->on('sessions')->onDelete('cascade');
+            $table->integer("sessions_id")->unsigned();
+            $table->foreign('sessions_id')->references('id')->on('sessions')->onDelete('cascade');
             $table->string("answer");
             $table->timestamps();
         });
